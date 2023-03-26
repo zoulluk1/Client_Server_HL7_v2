@@ -10,15 +10,16 @@ if __name__ == "__main__":
     server.bind((ip, port))
     server.listen(5)
     data = []
-    a = 0
+    print("------------------------------------------------------------------------")
     print(f"Server je spuštěn: {ip}:{port}")
 
     while True:
         j = 0
-        a = 0
+
         # Připojení klineta
         client, adress = server.accept()
         print(f"Spojení s klientem navázáno: {adress[0]}:{adress[1]}")
+        print("-------------------------------------------------------------------")
         # Přijetí zprávy od klienta
         while True:
             data.clear()
@@ -37,12 +38,12 @@ if __name__ == "__main__":
                 splitLine = line.split('|')
                 # print(splitLine[0])
                 if splitLine[0] == "MSH":
-                    a += 1
+
                     now = datetime.now()
                     nowDateTime = now.strftime("%Y%m%d%H%M%S")
                     string = f"MSH|^~\&|SERVER_4444|SERVER_4444|CLIENT_4444|CLIENT_4444|{nowDateTime}||ORU^R01^ORU_R01|20110616000005|P|2.4|||NE|AL|CZE|ASCII||ASCII\n"
-                    if a == 2:
-                        print(line)
+
+
                     # client.send(bytes(string, "utf-8"))
                 elif splitLine[0] == "PID":
                     patientID = splitLine[3]
@@ -52,7 +53,7 @@ if __name__ == "__main__":
                     check_file = os.path.isfile(path)
 
                     if check_file:
-                        print("Pacient:" + patientID)
+                        #print("Pacient:" + patientID)
                         string += f"PID|||2011021||^^^^^^L^A|||O\n" \
                                   f"PV1||I|^^OR-1^10.2.56.5:1\n" \
                                   f"ORC|RE\n"
@@ -73,8 +74,8 @@ if __name__ == "__main__":
                     else:
                         endDataTime = dataTime
 
-                    print(f" Data: {dataType}")
-                    print("Časový rozsah dat:" + dataTime + " - " + endDataTime)
+                    #print(f" Data: {dataType}")
+                    #print("Časový rozsah dat:" + dataTime + " - " + endDataTime)
                     client.send(bytes(line, "utf-8"))
 
                 elif splitLine[0] == "MSA":
@@ -83,9 +84,9 @@ if __name__ == "__main__":
                     j=1
                     break
                     client.close()
-
+                print(line)
             if check_file and patientID != 0:
-                print("----------")
+
                 with open(path, 'r') as read_f:
                     fileLines = read_f.readlines()
                     for lin in fileLines:
