@@ -19,6 +19,7 @@ import time
 
 # Definice proměných
 data = []
+f_data = []
 X = []
 Y = []
 Graph = []
@@ -40,6 +41,7 @@ if __name__ == "__main__":
             e += 1
             print(f"Pokus {e} připojení k serveru se nezdařilo")
             time.sleep(1)
+    # Připojení k serveru
     if connection == 1:
         # Aktuální datum a čas
         now = datetime.now()
@@ -68,15 +70,20 @@ if __name__ == "__main__":
 
                 for l in data:
                     print(l)
-                    ...
+                if len(data) != 0:
+                    with open(
+                            f'./ClientData/{str(PatientID)}_({str(StartDateTime)}-{str(EndDateTime)})_{str(nowDateTime)}.txt',
+                            'w') as write_d:
+                        write_d.writelines(f_data)
                 print(buffer)
-                # print("Vše přijato")
+                # Potvrzení přijetí celé zprávy
                 stringEnd = f"MSH|^~\&|CLIENT_4444|CLIENT_4444|SERVER_4444|SERVER_4444|{nowDateTime}||ORU^R01^ORU_R01|20110616000005|P|2.4|||NE|AL|CZE|ASCII||ASCII\n" \
                             f"MSA|AA|{nowDateTime}"
                 server.send(bytes(stringEnd, "utf-8"))
                 # Data pro graf:
                 if len(data) != 0:
                     print(f"Data pro graf: {Graph}")
+                    # Vykreslení grafů pro všechny druhy hodnot
                 for k in DataType:
                     X.clear()
                     Y.clear()
@@ -136,11 +143,18 @@ if __name__ == "__main__":
                 break
             elif buffer.split("|")[0] == "OBX":
                 data.append(buffer)
+                f_data.append(buffer)
                 Xaxis = buffer.split("|")[14]
                 MdataType = buffer.split("|")[3].split("^")[1]
                 Yaxis = buffer.split("|")[5]
                 Unit = buffer.split("|")[6]
                 Graph.append([MdataType, Xaxis, Yaxis, Unit])
+            elif buffer.split("|")[0] == ("MSH" or "PID" or "PV1" or "ORC"):
+                print(buffer)
+                f_data.append(buffer)
+            elif buffer.split("|")[0] == "OBR":
+                print(buffer)
+                f_data.append(f"{buffer}\n")
             elif buffer is not None:
                 print(buffer)
 

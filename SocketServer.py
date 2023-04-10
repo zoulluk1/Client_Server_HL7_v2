@@ -43,7 +43,6 @@ if __name__ == "__main__":
                     nowDateTime = now.strftime("%Y%m%d%H%M%S")
                     string = f"MSH|^~\&|SERVER_4444|SERVER_4444|CLIENT_4444|CLIENT_4444|{nowDateTime}||ORU^R01^ORU_R01|20110616000005|P|2.4|||NE|AL|CZE|ASCII||ASCII\n"
 
-
                     # client.send(bytes(string, "utf-8"))
                 elif splitLine[0] == "PID":
                     patientID = splitLine[3]
@@ -53,7 +52,7 @@ if __name__ == "__main__":
                     check_file = os.path.isfile(path)
 
                     if check_file:
-                        #print("Pacient:" + patientID)
+                        # print("Pacient:" + patientID)
                         string += f"PID|||2011021||^^^^^^L^A|||O\n" \
                                   f"PV1||I|^^OR-1^10.2.56.5:1\n" \
                                   f"ORC|RE\n"
@@ -74,14 +73,14 @@ if __name__ == "__main__":
                     else:
                         endDataTime = dataTime
 
-                    #print(f" Data: {dataType}")
-                    #print("Časový rozsah dat:" + dataTime + " - " + endDataTime)
+                    # print(f" Data: {dataType}")
+                    # print("Časový rozsah dat:" + dataTime + " - " + endDataTime)
                     client.send(bytes(line, "utf-8"))
 
                 elif splitLine[0] == "MSA":
                     print(line)
                     a = 1
-                    j=1
+                    j = 1
                     break
                     client.close()
                 print(line)
@@ -106,6 +105,6 @@ if __name__ == "__main__":
                         client.send(
                             bytes(f"Žádná data nevyhovují vaším požadavkům pro pacienta ID: {patientID}", "utf-8"))
                 client.send(bytes(f"MSA|AA|{nowDateTime}", "utf-8"))
-            if(j==1):
+            if j == 1:
                 break
     client.close()
